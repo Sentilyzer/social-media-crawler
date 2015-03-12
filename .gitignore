@@ -6,6 +6,8 @@
 __pycache__/
 local_settings.py
 
+### PyCharm ###
+.idea/
 
 ### Python ###
 # Byte-compiled / optimized / DLL files
