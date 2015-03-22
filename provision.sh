@@ -1,5 +1,7 @@
 #!/bin/bash
 
+SMC_NAME=social_media_crawler
+SMC_HOME=/vagrant/$SMC_NAME
 DBUSER=smc
 DBPASSWD=smcPASSWORD
 DBHOST=localhost
@@ -14,9 +16,10 @@ ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
 
 # add APT-Keys and Repositories
 
-sudo add-apt-repository "deb http://www.rabbitmq.com/debian/ stable main"
+sudo add-apt-repository "deb http://www.rabbitmq.com/debian/ testing main"
 wget https://www.rabbitmq.com/rabbitmq-signing-key-public.asc
 sudo apt-key add rabbitmq-signing-key-public.asc
+rm -f rabbitmq-signing-key-public.asc*
 
 # update package list and install essential packages
 apt-get update -y
@@ -37,6 +40,7 @@ sudo debconf-set-selections <<< "mysql-server \
 sudo debconf-set-selections <<< "mysql-server \
  mysql-server/root_password_again password $DBPASSWD"
 
+# mysql installation
 apt-get install -y mysql-server libmysqlclient-dev
 
 # create database and user
@@ -45,3 +49,10 @@ mysql -uroot -p$DBPASSWD -e "grant all privileges on $DBNAME.* to '$DBUSER'@'loc
 
 # install social media crawler specific python packages
 pip install -r /vagrant/requirements.txt
+
+# init
+cd $SMC_HOME
+python manage.py makemigrations
+python manage.py makemigrations $SMC_NAME
+
+python manage.py migrate
