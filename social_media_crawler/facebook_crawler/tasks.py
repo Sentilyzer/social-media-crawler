@@ -19,7 +19,16 @@ def get_posts_for(self, graph_id):
 @shared_task(bind=True)
 def save_posts(self, data):
     for post_data in data['data']:
-        create_post(post_data)
+        if _is_valid_post(post_data):
+            create_post(post_data)
+
+
+def _is_valid_post(post_data):
+    return 'id' in post_data \
+           and 'message' in post_data \
+           and 'created_time' in post_data \
+           and 'from' in post_data \
+           and 'name' in post_data['from']
 
 
 def create_post(post_data):
