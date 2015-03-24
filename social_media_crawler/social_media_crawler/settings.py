@@ -37,7 +37,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'social_media_crawler'
+    'social_media_crawler',
+    'facebook_crawler'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -54,10 +55,6 @@ ROOT_URLCONF = 'social_media_crawler.urls'
 
 WSGI_APPLICATION = 'social_media_crawler.wsgi.application'
 
-
-# Facebook configuration
-FACEBOOK_APP_ID = '377609379105449'
-FACEBOOK_SECRET_KEY = '058825d0ce4c2b507da708a09a180d20'
 
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
