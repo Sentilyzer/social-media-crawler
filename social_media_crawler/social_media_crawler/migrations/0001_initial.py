@@ -17,9 +17,9 @@ class Migration(migrations.Migration):
                 ('date', models.DateTimeField()),
                 ('name', models.CharField(max_length=100)),
                 ('text', models.TextField()),
-                ('likes', models.IntegerField()),
-                ('shares', models.IntegerField()),
-                ('comments', models.ForeignKey(to='social_media_crawler.Post', null=True)),
+                ('likes', models.IntegerField(default=0)),
+                ('shares', models.IntegerField(default=0)),
+                ('replyto', models.ForeignKey(to='social_media_crawler.Post', null=True)),
             ],
             options={
             },

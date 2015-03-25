@@ -44,7 +44,7 @@ sudo debconf-set-selections <<< "mysql-server \
 apt-get install -y mysql-server libmysqlclient-dev
 
 # create database and user
-mysql -uroot -p$DBPASSWD -e "CREATE DATABASE IF NOT EXISTS $DBNAME CHARACTER SET utf8 COLLATE utf8_general_ci"
+mysql -uroot -p$DBPASSWD -e "CREATE DATABASE IF NOT EXISTS $DBNAME CHARACTER SET utf8mb4"
 mysql -uroot -p$DBPASSWD -e "grant all privileges on $DBNAME.* to '$DBUSER'@'localhost' identified by '$DBPASSWD'"
 
 # install social media crawler specific python packages
