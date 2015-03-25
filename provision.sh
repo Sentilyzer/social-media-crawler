@@ -1,17 +1,56 @@
 #!/bin/bash
 
+SMC_NAME=social_media_crawler
+SMC_HOME=/vagrant/$SMC_NAME
+DBUSER=smc
+DBPASSWD=smcPASSWORD
+DBHOST=localhost
+DBNAME=smc_db
+
 # set system timezone
 echo "Europe/Berlin" | sudo tee /etc/timezone
 dpkg-reconfigure -f noninteractive tzdata
 
+# add github to known SSH Hosts
+ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
+
+# add APT-Keys and Repositories
+
+sudo add-apt-repository "deb http://www.rabbitmq.com/debian/ testing main"
+wget https://www.rabbitmq.com/rabbitmq-signing-key-public.asc
+sudo apt-key add rabbitmq-signing-key-public.asc
+rm -f rabbitmq-signing-key-public.asc*
+
 # update package list and install essential packages
-echo "Updating packages...\n"
 apt-get update -y
-echo "Installing packages...\n"
-apt-get install -y build-essential curl git vim libssl-dev man python python-pip
+apt-get upgrade -y
 
-# add github to known SSH hosts
-ssh-keyscan github.com >> ~/.ssh/known_hosts
+# install basic packages
+apt-get install -y build-essential curl git vim libssl-dev man
 
-# install python requirements from requirements.txt
-cd /vagrant && pip install -r requirements.txt
+# install python stuff
+apt-get install -y python python-pip python-software-properties python-dev python-setuptools
+
+# install rabbitmq
+apt-get install -y rabbitmq-server
+
+# mysql configuration variables needed for mysql setup
+sudo debconf-set-selections <<< "mysql-server \
+ mysql-server/root_password password $DBPASSWD"
+sudo debconf-set-selections <<< "mysql-server \
+ mysql-server/root_password_again password $DBPASSWD"
+
+# mysql installation
+apt-get install -y mysql-server libmysqlclient-dev
+
+# create database and user
+mysql -uroot -p$DBPASSWD -e "CREATE DATABASE IF NOT EXISTS $DBNAME CHARACTER SET utf8mb4"
+mysql -uroot -p$DBPASSWD -e "grant all privileges on $DBNAME.* to '$DBUSER'@'localhost' identified by '$DBPASSWD'"
+
+# install social media crawler specific python packages
+pip install -r /vagrant/requirements.txt
+
+# init
+cd $SMC_HOME
+python manage.py makemigrations
+python manage.py migrate
