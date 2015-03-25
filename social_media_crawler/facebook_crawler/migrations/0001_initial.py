@@ -13,8 +13,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Post',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('graph_id', models.CharField(max_length=50)),
+                ('graph_id', models.CharField(max_length=50, serialize=False, primary_key=True)),
                 ('date', models.DateTimeField()),
                 ('name', models.CharField(max_length=100)),
                 ('text', models.TextField()),

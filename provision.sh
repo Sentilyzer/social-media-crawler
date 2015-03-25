@@ -44,7 +44,7 @@ sudo debconf-set-selections <<< "mysql-server \
 apt-get install -y mysql-server libmysqlclient-dev
 
 # create database and user
-mysql -uroot -p$DBPASSWD -e "CREATE DATABASE IF NOT EXISTS $DBNAME CHARACTER SET utf8 COLLATE utf8_general_ci"
+mysql -uroot -p$DBPASSWD -e "CREATE DATABASE IF NOT EXISTS $DBNAME CHARACTER SET utf8mb4"
 mysql -uroot -p$DBPASSWD -e "grant all privileges on $DBNAME.* to '$DBUSER'@'localhost' identified by '$DBPASSWD'"
 
 # install social media crawler specific python packages
@@ -53,6 +53,4 @@ pip install -r /vagrant/requirements.txt
 # init
 cd $SMC_HOME
 python manage.py makemigrations
-python manage.py makemigrations $SMC_NAME
-
 python manage.py migrate
