@@ -8,4 +8,4 @@ class Post(models.Model):
     text = models.TextField()
     likes = models.IntegerField(default=0)
     shares = models.IntegerField(default=0)
-    replyto = models.ForeignKey("self", null=True)
+    replyto = models.ForeignKey("self", null=True, related_name="replies")
