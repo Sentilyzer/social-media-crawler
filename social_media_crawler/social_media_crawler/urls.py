@@ -4,5 +4,5 @@ import views
 
 urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^post/', include('facebook_crawler.urls'))
+    url(r'^facebook/', include('facebook_crawler.urls'))
 )
